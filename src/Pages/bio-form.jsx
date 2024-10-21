@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
-import { db } from '../Firebase'; // Firebase setup
-import Swal from 'sweetalert2'; // Optional: for success alert
-import Button from './Button';
+import { collection, addDoc } from 'firebase/firestore'; 
+import { db } from '../Firebase'; 
+import Swal from 'sweetalert2'; 
+import Button from '../components/Button';
 
 function BioForm() {
   const [formData, setFormData] = useState({
@@ -15,35 +15,35 @@ function BioForm() {
     sleepRoutine: ''
   });
 
-  const navigate = useNavigate(); // Hook to navigate after form submission
+  const navigate = useNavigate();
 
-  // Handle input field changes
+  s
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      // Send data to Firestore
+      
       const docRef = await addDoc(collection(db, 'users'), formData);
       console.log('Document written with ID: ', docRef.id);
 
-      // Optional: Show success alert
+      
       Swal.fire({
         icon: 'success',
         title: 'Form Submitted!',
         text: 'Your details have been saved successfully!',
         confirmButtonText: 'OK'
       }).then(() => {
-        // Navigate to the new page (NewTrack)
+       
         navigate('/NewTrack');
       });
 
-      // Clear form after submission
+      
       setFormData({
         name: '',
         age: '',
@@ -66,7 +66,7 @@ function BioForm() {
     <div className="container mx-auto py-8">
       <h2 className="text-3xl font-bold mb-6 text-center">Tell Us About Yourself</h2>
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
-        {/* Name Field */}
+        
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
             Name
@@ -82,7 +82,6 @@ function BioForm() {
           />
         </div>
 
-        {/* Age Field */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="age">
             Age
@@ -98,7 +97,7 @@ function BioForm() {
           />
         </div>
 
-        {/* Height Field */}
+        
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="height">
             Height (in cm)
@@ -114,7 +113,7 @@ function BioForm() {
           />
         </div>
 
-        {/* Weight Field */}
+       
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="weight">
             Weight (in kg)
@@ -130,7 +129,7 @@ function BioForm() {
           />
         </div>
 
-        {/* Diet Field */}
+        
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diet">
             Diet (e.g., vegetarian, vegan, keto, etc.)
@@ -146,7 +145,7 @@ function BioForm() {
           />
         </div>
 
-        {/* Sleep Routine Field */}
+        
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sleepRoutine">
             Sleep Routine (hours per night)
@@ -162,7 +161,7 @@ function BioForm() {
           />
         </div>
 
-        {/* Submit Button */}
+        
         <Button label="Submit" />
       </form>
     </div>

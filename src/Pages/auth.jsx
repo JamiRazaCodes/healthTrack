@@ -29,21 +29,21 @@ const AuthPage = () => {
     setError(null);
 
     if (isLogin) {
-        // Login logic
+        
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             console.log('User signed in:', userCredential.user);
             
-            // Save user info in localStorage
+            
             localStorage.setItem('user', JSON.stringify(userCredential.user));
 
-            navigate('/'); // Redirect to home page after login
+            navigate('/'); 
         } catch (error) {
             setError(error.message);
             console.error('Error signing in:', error);
         }
     } else {
-        // Sign up logic
+        
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
@@ -56,7 +56,7 @@ const AuthPage = () => {
 
                 await updateProfile(user, { displayName: name, photoURL: avatarURL });
                 
-                // Save user info to Firestore and localStorage
+                
                 await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
                     email: user.email,
@@ -67,7 +67,7 @@ const AuthPage = () => {
             } else {
                 await updateProfile(user, { displayName: name });
                 
-                // Save user info to Firestore and localStorage
+                
                 await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
                     email: user.email,
@@ -76,7 +76,7 @@ const AuthPage = () => {
                 localStorage.setItem('user', JSON.stringify(user));
             }
 
-            navigate('/'); // Redirect to home page after sign-up
+            navigate('/');
         } catch (error) {
             setError(error.message);
             console.error('Error signing up:', error);

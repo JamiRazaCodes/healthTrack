@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../components/Button';
 import { collection, addDoc } from 'firebase/firestore';
-import { db, auth } from '../Firebase'; // Import auth to get current user
+import { db, auth } from '../Firebase'; 
 import Swal from 'sweetalert2';
-import { onAuthStateChanged } from 'firebase/auth'; // Listen for auth state
+import { onAuthStateChanged } from 'firebase/auth'; 
 
 function Billing({ pricing }) {
   const [formData, setFormData] = useState({
@@ -13,18 +13,20 @@ function Billing({ pricing }) {
     card: ''
   });
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null); // Store current user
+  const [user, setUser] = useState(null); 
   const navigate = useNavigate();
   const { planId } = useParams();
   const plan = pricing.find((p) => p.plan.toLowerCase() === planId);
+  const goBack = () => navigate('/');
 
-  // Listen for user authentication
+
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        navigate('/auth'); // Redirect to auth if not logged in
+        navigate('/auth'); 
       }
     });
     return () => unsubscribe();
@@ -34,7 +36,7 @@ function Billing({ pricing }) {
     return <h2>Plan not found</h2>;
   }
 
-  // Handle form input change
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -42,11 +44,10 @@ function Billing({ pricing }) {
     });
   };
 
-  // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Simple card number validation (could be more robust)
     if (!/^\d{16}$/.test(formData.card.replace(/\s/g, ''))) {
       Swal.fire({
         title: 'Error',
@@ -68,7 +69,7 @@ function Billing({ pricing }) {
           timestamp: new Date(),
         });
 
-        // Show success alert
+        
         Swal.fire({
           title: 'Purchase Complete',
           text: 'Your billing details have been saved successfully.',
@@ -76,12 +77,10 @@ function Billing({ pricing }) {
           confirmButtonText: 'OK',
         }).then((result) => {
           if (result.isConfirmed) {
-            // Navigate to the bio-form page on alert confirmation
-            navigate('/bio-form'); // Change to the correct route for the BioForm
+            navigate('/bio-form'); 
           }
         });
         
-        // Reset form after successful submission
         setFormData({
           name: '',
           email: '',
@@ -102,7 +101,6 @@ function Billing({ pricing }) {
     }
   };
 
-  const goBack = () => navigate('/');
 
   return (
     <div className="container mx-auto py-24 flex justify-center">

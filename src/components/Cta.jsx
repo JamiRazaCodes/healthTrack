@@ -1,6 +1,14 @@
 import Button from "./Button";
 
 function CallToAction({callToAction}) {
+
+  const scrollToPricing = () => {
+    const section = document.getElementById('pricing-section');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
  return (
     <section className="bg-gray-100 py-12">
     <div className="container mx-auto flex flex-col md:flex-row items-center">
@@ -12,7 +20,7 @@ function CallToAction({callToAction}) {
         <p className="text-lg text-gray-700 mb-6">
           Sign up today and take the first step towards a healthier, happier you.
         </p>
-        <Button label="Get Started" />
+        <Button label="Get Started" onClick={scrollToPricing} />
       </div>
       
       <div className="md:w-1/2">

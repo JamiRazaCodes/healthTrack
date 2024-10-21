@@ -23,11 +23,10 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-// Correct logOut function
-const logOut = () => {
-    const auth = getAuth(); // Ensure you're getting the auth instance here
-    return signOut(auth);
-  };
 
-// Export the services
+const logOut = () => {
+  const auth = getAuth(); 
+  return signOut(auth);
+};
+
 export { db, auth, storage, logOut };

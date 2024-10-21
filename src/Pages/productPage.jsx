@@ -14,7 +14,7 @@ function ProductPage() {
   const [priceRange, setPriceRange] = useState([0, 199]);
 
   const filteredProducts = landingPageData.healthProducts.filter((product) => {
-    const productPrice = parseFloat(product.price.replace('$', ''));
+    const productPrice = parseFloat(product.price);
     const isWithinPriceRange = productPrice >= priceRange[0] && productPrice <= priceRange[1];
     return (selectedCategory === 'All' || product.category === selectedCategory) && isWithinPriceRange;
   });

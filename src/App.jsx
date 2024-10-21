@@ -13,13 +13,20 @@ import CartPage from './Pages/Cart';
 import ActivityMonitoring from './Pages/ActivityMonitoring';
 import NutritionPlanning from './Pages/NutritionPlanning';
 import MentalWellness from './Pages/MentalWellness';
+import BioForm from './Pages/bio-form';
+import NewTrack from './Pages/NewTrack';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
+import TermsAndConditions from './Pages/TermCondition';
+import Support from './Pages/Support.jsx';
+import CartcontextProvider from './context/CartContext.jsx';
+import CheckoutPage from './Pages/CheckOut.jsx';
 
 function App() {
   const { pricing } = landingPageData;
   
 
   return (
-  
+  <CartcontextProvider>
     <BrowserRouter>
     <Header/>
       <Routes>
@@ -30,13 +37,19 @@ function App() {
         <Route path="/AboutUs" element={<AboutUs aboutUsData={aboutUsData} />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/billing/:planId" element={<Billing pricing={pricing} />} />
-        <Route path="/Cart" element={<CartPage />} />
+        <Route path="/Cart" element={<CartPage />}/>
         <Route path="/activity-monitoring" element={<ActivityMonitoring />} />
         <Route path="/nutrition-planning" element={<NutritionPlanning />} />
         <Route path="/mental-wellness" element={<MentalWellness />} />
+        <Route path='/bio-form' element={<BioForm/>}/>
+        <Route path='/NewTrack' element={<NewTrack/>}/>
+        <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>}/>
+        <Route path="/TermCondition" element={<TermsAndConditions/>}/>
+        <Route path="/Support" element={<Support/>}/>
+        <Route path='/CheckOut' element={<CheckoutPage/>}/>
       </Routes>
     </BrowserRouter>
-   
+    </CartcontextProvider>
   );
 }
 

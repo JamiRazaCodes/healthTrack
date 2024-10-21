@@ -6,14 +6,14 @@ import landingPageData from "../Webdata/webdata";
 
 function Hero() {
   const settings = {
-    dots: true, // Show navigation dots
-    infinite: true, // Infinite loop
-    speed: 500, // Transition speed
-    slidesToShow: 1, // Number of slides to show
-    slidesToScroll: 1, // Number of slides to scroll at once
-    autoplay: true, // Automatically scrolls slides
-    autoplaySpeed: 3000, // Speed of the autoplay
-    arrows: true, // Show next and previous arrows
+    dots: true, 
+    infinite: true, 
+    speed: 500, 
+    slidesToShow: 1, 
+    slidesToScroll: 1, 
+    autoplay: true, 
+    autoplaySpeed: 3000, 
+    arrows: true, 
   };
 
   const { slides } = landingPageData;

@@ -1,22 +1,22 @@
-import Button from "./Button";
-import landingPageData from '../Webdata/webdata';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { ShoppingOutlined } from '@ant-design/icons';
 import { Badge } from "antd";
-import React, { useEffect, useState } from 'react';
-import { auth } from '../Firebase'; // Import Firebase auth
-import { onAuthStateChanged } from 'firebase/auth';
+import { CartContext } from '../context/CartContext'; 
 import { Avatar } from '@mui/material';
-import { logOut } from "../Firebase";
+import { auth } from '../Firebase'; 
+import { onAuthStateChanged } from 'firebase/auth'; 
+import { logOut } from "../Firebase"; 
+import Button from './Button';
+import landingPageData from '../Webdata/webdata';
 
 
 function Header() {
- 
-  const [user, setUser] = useState(null); // State to store user info
-  const location = useLocation();
+  const { getItemCount, clearCart } = useContext(CartContext);
+  const [cartItemCount, setCartItemCount] = useState(0);
+  const [user, setUser] = useState(null); 
   const { header } = landingPageData;
 
-  // Check for user auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -25,23 +25,38 @@ function Header() {
         setUser(null);
       }
     });
-    return () => unsubscribe();
+    
+
+    return () => unsubscribe(); 
   }, []);
 
- 
-  // Scroll to pricing section
+  
+  useEffect(() => {
+    setCartItemCount(getItemCount());
+  }, [getItemCount]);
+
+  
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        clearCart(); 
+        console.log('User signed out and cart cleared locally');
+      })
+      .catch((error) => {
+        console.error('Error signing out:', error);
+      });
+  };
   const scrollToPricing = () => {
     const section = document.getElementById('pricing-section');
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
   return (
     <header className="text-gray-600 body-font">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <Link to="/" className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-          <img src={header.logo} className="h-20 w-20" alt="logo" />
+          <img src={header.logo} className="h-30 w-20" alt="logo" />
           <span className="ml-3 text-xl">{header.title}</span>
         </Link>
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
@@ -50,37 +65,23 @@ function Header() {
             <button onClick={scrollToPricing} className="mr-5 hover:text-gray-900">PLANS</button>
           )}
           <Link to="/productPage" className="mr-5 hover:text-gray-900">PRODUCT</Link>
-          <Link to="/AboutUs" className="mr-5 hover:text-gray-900">ABOUT US</Link>
+          <Link to="/aboutUs" className="mr-5 hover:text-gray-900">ABOUT US</Link>
           <Link to="/ContactUs" className="mr-5 hover:text-gray-900">CONTACT US</Link>
 
-          {/* Conditionally render based on user auth status */}
           {user ? (
             <>
               <span className="mr-1 text-gray-700">Hi, {user.displayName || user.email}</span>
               <Avatar className="mr-5" alt={user.displayName} src={user.photoURL} />
               <span className="mr-5">
-                <Button 
-  label="Logout" 
-  onClick={() => {
-    logOut()
-      .then(() => {
-        console.log('User signed out');
-      })
-      .catch((error) => {
-        console.error('Error signing out:', error);
-      });
-  }} 
-/>
+                <Button onClick={handleLogout} label={"Logout"} className="text-gray-900 hover:text-purple-900"/>
               </span>
             </>
           ) : (
-            <Link to="/auth" className="mr-5 hover:text-gray-900">
-              <Button label="Login" /> {/* Login button for navigation */}
-            </Link>
+            <Link to="/auth"><Button label={"logIn"}/></Link>
           )}
 
-          <Link to="/Cart">
-            <Badge showZero>
+          <Link to="/cart">
+            <Badge count={cartItemCount} showZero>
               <ShoppingOutlined style={{ fontSize: 35 }} className="text-gray-700 hover:text-purple-900" />
             </Badge>
           </Link>

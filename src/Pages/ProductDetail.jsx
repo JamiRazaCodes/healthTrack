@@ -1,11 +1,12 @@
-import React, { useContext} from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import landingPageData from '../Webdata/webdata';
 import Button from '../components/Button';
-
+import { CartContext } from '../context/CartContext'; 
 
 function ProductDetail() {
   const { id } = useParams(); 
+  const { addItemToCart } = useContext(CartContext); 
   const product = landingPageData.healthProducts.find((p) => p.id === parseInt(id)); 
 
   if (!product) {
@@ -28,13 +29,13 @@ function ProductDetail() {
             <div className="flex">
               <span className="title-font font-medium text-2xl text-gray-900">${product.price}</span>
               <div className="flex ml-auto py-2 px-6">
-              <Button
-               label="Add to cart"
-               onClick={() => {
-              addItemToCart(product); 
-              console.log('Product added:', product); 
-              }}
-              /> 
+                <Button
+                  label="Add to cart"
+                  onClick={() => {
+                    addItemToCart(product); 
+                    console.log('Product added:', product);
+                  }}
+                /> 
               </div>
             </div>
           </div>

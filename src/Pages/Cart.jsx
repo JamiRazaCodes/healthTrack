@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, InputNumber, Table } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import landingPageData from '../Webdata/webdata';
+import { useNavigate } from 'react-router-dom'; 
+import { CartContext } from '../context/CartContext'; 
 
 function CartPage() {
-  const [cartItems, setCartItems] = useState([  
-
-  ]);
+  const { cartItems, setCartItems } = useContext(CartContext); 
+  const navigate = useNavigate(); 
 
 
   const handleQuantityChange = (value, record) => {
@@ -16,15 +16,21 @@ function CartPage() {
     setCartItems(updatedCart);
   };
 
+  
   const removeItem = (record) => {
     const updatedCart = cartItems.filter(item => item.key !== record.key);
     setCartItems(updatedCart);
   };
 
+ 
   const calculateTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    return cartItems.reduce((total, item) => {
+      const itemPrice = Number(item.price) || 0; 
+      return total + itemPrice * item.quantity;
+    }, 0).toFixed(2);
   };
 
+ 
   const columns = [
     {
       title: 'Product',
@@ -41,7 +47,10 @@ function CartPage() {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (price) => <span>${price.toFixed(2)}</span>,
+      render: (price) => {
+        const formattedPrice = Number(price) || 0; 
+        return <span>${formattedPrice.toFixed(2)}</span>;
+      },
     },
     {
       title: 'Quantity',
@@ -59,7 +68,10 @@ function CartPage() {
     {
       title: 'Total',
       key: 'total',
-      render: (_, record) => <span>${(record.price * record.quantity).toFixed(2)}</span>,
+      render: (_, record) => {
+        const total = (Number(record.price) || 0) * record.quantity;
+        return <span>${total.toFixed(2)}</span>;
+      },
     },
     {
       title: 'Action',
@@ -77,14 +89,13 @@ function CartPage() {
 
   return (
     <div className="container mx-auto py-12">
-      {/* Cart Title */}
       <h1 className="text-4xl font-bold text-center mb-8">Your Shopping Cart</h1>
 
-      {/* Cart Table */}
+      
       <Table
         columns={columns}
         dataSource={cartItems}
-        pagination={false} // Disable pagination for cart
+        pagination={false}
         footer={() => (
           <div className="flex justify-end text-lg">
             <strong>Total: ${calculateTotalPrice()}</strong>
@@ -92,11 +103,10 @@ function CartPage() {
         )}
       />
 
-      {/* Cart Summary */}
       <div className="mt-12">
         <div className="flex justify-between items-center border-t pt-4">
           <div>
-            <Button type="primary" className="mr-4">
+            <Button type="primary" className="mr-4" onClick={() => navigate('/productPage')}>
               Continue Shopping
             </Button>
           </div>
@@ -105,7 +115,7 @@ function CartPage() {
             <div className="text-right">
               <p>Total Items: {cartItems.length}</p>
               <p>Total Price: <strong>${calculateTotalPrice()}</strong></p>
-              <Button type="primary" size="large" className="mt-4">
+              <Button type="primary" size="large" className="mt-4" onClick={() => navigate('/CheckOut')}>
                 Proceed to Checkout
               </Button>
             </div>

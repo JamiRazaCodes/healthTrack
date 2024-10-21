@@ -4,12 +4,23 @@ export const landingPageData = {
     subtitle: "Your partner in achieving a healthier lifestyle.",
     logo: "https://img.freepik.com/free-vector/bird-colorful-gradient-design-vector_343694-2506.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1724716800&semt=ais_hybrid",
   },
-  hero: {
-    title: "Take Charge of Your Health Today",
-    description: "Monitor your daily activities, set fitness goals, and stay on track with HealthTrack.",
-    buttonText: "Join Now",
-    image: "https://images.unsplash.com/photo-1483721310020-03333e577078?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZpdG5lc3N8ZW58MHx8MHx8fDA%3D",
-  },
+ slides : [
+    {
+      title: 'Welcome to HealthTrack',
+      description: 'Explore our premium health and wellness programs',
+      img: 'https://sport.leeds.ac.uk/wp-content/uploads/2024/06/Health-and-Wellbeing-banner-1920-x-600.webp',
+    },
+    {
+      title: 'Discover Your Inner Strength',
+      description: 'Personalized health care for a better you',
+      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSi-OfeL5pEFGRIRmw4Pfasaa5UMtV5B5C6Q&s', 
+    },
+    {
+      title: 'Achieve Your Health Goals',
+      description: 'Programs and resources for every lifestyle',
+      img: 'https://www.forgept.com/wp-content/smush-webp/2024/03/Forge-Blog-Graphics-1920-%C3%97-600-px-52.png.webp',
+    },
+  ],
   features: [
     {
       id: 1,

@@ -1,36 +1,41 @@
 import Button from "./Button";
+import { Link } from 'react-router-dom';
 
-function Feature ({ features }) {
+function Feature ({  }) {
   return (
-    <section className="text-gray-600 body-font">
-    <div className="container px-5 py-24 mx-auto">
-      <h1 className="sm:text-3xl text-2xl font-medium title-font text-center text-gray-900 mb-20">
-      Empowering Your Health Journey
-    <br className="hidden sm:block" />
-    One Step at a Time
-      </h1>
-      <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
-       {features.map((data, ind) => (<div className="p-4 md:w-1/3 flex">
-          <div key={data} className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 mb-4 flex-shrink-0">
-            {data.icon}
-          </div>
-          <div className="flex-grow pl-6">
-            <h2 className="text-gray-900 text-lg title-font font-medium mb-2">
-              {data.title}
-            </h2>
-            <p className="leading-relaxed text-base">
-              {data.description}
-            </p>
-          <Button  label={data.button}/>
-          </div>
+    <div className="text-center py-12 bg-gray-50 ">
+      <h1 className="text-4xl font-bold mb-10">Empowering Your Health Journey <br/> One Step at a Time</h1>
+      <div className="grid md:grid-cols-3 gap-8 px-4">
+      
+
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Activity Monitoring</h2>
+          <p className="mb-6 text-gray-600">Keep track of your daily steps, workouts, and physical activities.</p>
+          <Link to="/activity-monitoring">
+            <Button label={"Learn More"}/>
+             
+          </Link>
         </div>
-               
-       )
-      )
-       }
+
+        
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Nutrition Planning</h2>
+          <p className="mb-6 text-gray-600">Plan your meals and track your nutritional intake to maintain a balanced diet.</p>
+          <Link to="/nutrition-planning">
+          <Button label={"Learn More"}/>
+          </Link>
         </div>
+
+        
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Mental Wellness</h2>
+          <p className="mb-6 text-gray-600">Practice mindfulness and track your mental well-being with guided meditations.</p>
+          <Link to="/mental-wellness">
+          <Button label={"Learn More"}/>
+          </Link>
+        </div>
+      </div>
     </div>
-  </section>
   );
 }
 

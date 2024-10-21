@@ -10,14 +10,16 @@ import aboutUsData from './Webdata/aboutus';
 import ProductPage from './Pages/productPage';
 import Detail from './Pages/ProductDetail';
 import CartPage from './Pages/Cart';
-import CartcontextProvider from './context/CartContext';
+import ActivityMonitoring from './Pages/ActivityMonitoring';
+import NutritionPlanning from './Pages/NutritionPlanning';
+import MentalWellness from './Pages/MentalWellness';
 
 function App() {
   const { pricing } = landingPageData;
   
 
   return (
-    <CartcontextProvider>
+  
     <BrowserRouter>
     <Header/>
       <Routes>
@@ -29,9 +31,12 @@ function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/billing/:planId" element={<Billing pricing={pricing} />} />
         <Route path="/Cart" element={<CartPage />} />
+        <Route path="/activity-monitoring" element={<ActivityMonitoring />} />
+        <Route path="/nutrition-planning" element={<NutritionPlanning />} />
+        <Route path="/mental-wellness" element={<MentalWellness />} />
       </Routes>
     </BrowserRouter>
-    </CartcontextProvider>
+   
   );
 }
 

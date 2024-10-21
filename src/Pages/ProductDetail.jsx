@@ -1,4 +1,3 @@
-import { CartContext } from '../context/CartContext';
 import React, { useContext} from 'react';
 import { useParams } from 'react-router-dom';
 import landingPageData from '../Webdata/webdata';
@@ -8,7 +7,6 @@ import Button from '../components/Button';
 function ProductDetail() {
   const { id } = useParams(); 
   const product = landingPageData.healthProducts.find((p) => p.id === parseInt(id)); 
-  const { addItemToCart } = useContext(CartContext);
 
   if (!product) {
     return <div className='text-8xl font-bold text-red-800 text-center m-11'>Product not found</div>;
@@ -33,8 +31,8 @@ function ProductDetail() {
               <Button
                label="Add to cart"
                onClick={() => {
-              addItemToCart(product); // Add product to cart
-              console.log('Product added:', product); // Ensure this logs the correct product
+              addItemToCart(product); 
+              console.log('Product added:', product); 
               }}
               /> 
               </div>

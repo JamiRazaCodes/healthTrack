@@ -9,10 +9,10 @@ import Pricing from '../components/pricing'
 import CallToAction from '../components/Cta'
 
 function Home() {
-    const {header, hero, callToAction, features, footer, pricing, testimonials} = landingPageData   
+    const {header, slides, callToAction, features, footer, pricing, testimonials} = landingPageData   
       return (
  <div>
-<Hero hero = {hero}/>
+<Hero slides = {slides}/>
 <Feature features={features}/>
 <Testimonials testimonials = {testimonials}/>
 <section id="pricing-section">

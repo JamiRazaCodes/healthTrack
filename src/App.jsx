@@ -20,6 +20,7 @@ import TermsAndConditions from './Pages/TermCondition';
 import Support from './Pages/Support.jsx';
 import CartcontextProvider from './context/CartContext.jsx';
 import CheckoutPage from './Pages/CheckOut.jsx';
+import OrderHistoryPage from './Pages/OrderHistory.jsx';
 
 function App() {
   const { pricing } = landingPageData;
@@ -47,6 +48,7 @@ function App() {
         <Route path="/TermCondition" element={<TermsAndConditions/>}/>
         <Route path="/Support" element={<Support/>}/>
         <Route path='/CheckOut' element={<CheckoutPage/>}/>
+        <Routes path="/OrederHistory" element = {<OrderHistoryPage/>}/>
       </Routes>
     </BrowserRouter>
     </CartcontextProvider>

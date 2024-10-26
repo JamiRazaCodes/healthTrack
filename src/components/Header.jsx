@@ -85,6 +85,9 @@ function Header() {
               <ShoppingOutlined style={{ fontSize: 35 }} className="text-gray-700 hover:text-purple-900" />
             </Badge>
           </Link>
+          <Link to={"/OrderHistory"}>
+          <HistoryOutlined />
+          </Link>
         </nav>
       </div>
     </header>

@@ -48,7 +48,7 @@ function App() {
         <Route path="/TermCondition" element={<TermsAndConditions/>}/>
         <Route path="/Support" element={<Support/>}/>
         <Route path='/CheckOut' element={<CheckoutPage/>}/>
-        <Routes path="/OrederHistory" element = {<OrderHistoryPage/>}/>
+        <Route path="/OrderHistory" element = {<OrderHistoryPage/>}/>
       </Routes>
     </BrowserRouter>
     </CartcontextProvider>

@@ -13,11 +13,13 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import { useNavigate } from 'react-router-dom';
 
 function OrderHistoryPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Track error state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,22 +27,32 @@ function OrderHistoryPage() {
       try {
         const user = auth.currentUser;
         if (user) {
-          const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
+          setIsAuthenticated(true);
+          // Fetch orders where 'email' matches the current user's email
+          const q = query(collection(db, 'orders'), where('email', '==', user.email));
           const querySnapshot = await getDocs(q);
-          const orderData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          setOrders(orderData);
+
+          if (!querySnapshot.empty) {
+            const orderData = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+
+            setOrders(orderData);
+          }
         } else {
-          navigate('/login');
+          setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Failed to fetch orders:', error);
+        setError('Failed to fetch your order history. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, [navigate]);
+  }, []);
 
   return (
     <div className="container mx-auto py-12">
@@ -52,6 +64,14 @@ function OrderHistoryPage() {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <CircularProgress />
         </div>
+      ) : error ? (
+        <Typography variant="h6" component="p" align="center" color="error">
+          {error}
+        </Typography>
+      ) : !isAuthenticated ? (
+        <Typography variant="h6" component="p" align="center" color="textSecondary">
+          Please log in to view your order history.
+        </Typography>
       ) : orders.length === 0 ? (
         <Typography variant="h6" component="p" align="center">
           No previous orders found.
@@ -73,16 +93,18 @@ function OrderHistoryPage() {
                   <TableCell>{order.id}</TableCell>
                   <TableCell>
                     <ul>
-                      {order.items.map((item, index) => (
+                      {order.cartItems.map((item, index) => (
                         <li key={index}>
                           {`${item.title} (x${item.quantity}) - $${item.price}`}
                         </li>
                       ))}
                     </ul>
                   </TableCell>
-                  <TableCell>${order.totalPrice.toFixed(2)}</TableCell>
                   <TableCell>
-                    {new Date(order.orderDate.seconds * 1000).toLocaleDateString()}
+                    ${order.cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
               ))}

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingOutlined } from '@ant-design/icons';
 import { Badge } from "antd";
+import { HistoryOutlined } from '@ant-design/icons';
 import { CartContext } from '../context/CartContext'; 
 import { Avatar } from '@mui/material';
 import { auth } from '../Firebase'; 
@@ -85,9 +86,16 @@ function Header() {
               <ShoppingOutlined style={{ fontSize: 35 }} className="text-gray-700 hover:text-purple-900" />
             </Badge>
           </Link>
-          <Link to={"/OrderHistory"}>
+          {user ? ( 
+            <>
+          <Link to={"/OrderHistory"}style={{ fontSize: 30 }} className=" m-5 text-gray-700 hover:text-purple-900">
           <HistoryOutlined />
           </Link>
+          </>
+          ):(
+            <> </>
+          )
+}
         </nav>
       </div>
     </header>

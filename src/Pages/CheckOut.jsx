@@ -1,16 +1,43 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { CartContext } from '../context/CartContext';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { Button, Input, Form, message } from 'antd'; 
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { Button, Input, Form, message } from 'antd';
 
 function CheckoutPage() {
   const { cartItems, setCartItems } = useContext(CartContext); 
-  const [loading, setLoading] = useState(false); 
-  const [form] = Form.useForm(); 
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const db = getFirestore();
+  const auth = getAuth();
+  const navigate = useNavigate();
 
-  
+  // Set user data into form once authenticated
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+        // Automatically fill form fields with user data
+        form.setFieldsValue({
+          fullName: user.displayName || '', // Use displayName if available
+          email: user.email || '',
+        });
+      } else {
+        message.warning('Please log in to place an order.');
+        navigate('/auth'); 
+      }
+    });
+    return () => unsubscribe();
+  }, [auth, form, navigate]);
+
   const handleSubmit = async (values) => {
+    if (!isAuthenticated) {
+      message.warning('Please log in to place an order.');
+      return;
+    }
+
     setLoading(true); 
 
     try {
@@ -18,13 +45,12 @@ function CheckoutPage() {
         ...values, 
         cartItems, 
         createdAt: new Date(),
+        userId: auth.currentUser.uid, 
       });
 
       message.success('Order placed successfully!');
 
-
       setCartItems([]); 
-
       form.resetFields(); 
 
     } catch (error) {
@@ -78,22 +104,6 @@ function CheckoutPage() {
             form={form} 
             onFinish={handleSubmit}
           >
-            <Form.Item
-              label="Full Name"
-              name="fullName"
-              rules={[{ required: true, message: 'Please enter your name' }]}
-            >
-              <Input placeholder="Enter your full name" />
-            </Form.Item>
-
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}
-            >
-              <Input placeholder="Enter your email" />
-            </Form.Item>
-
             <Form.Item
               label="Shipping Address"
               name="address"

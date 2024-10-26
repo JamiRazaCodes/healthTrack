@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import Button from '../components/Button';
-import { auth, storage } from '../Firebase'; 
+import Button from '../components/Button'; 
+import { auth, storage } from '../Firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
-import { db } from '../Firebase'; 
-import { doc, setDoc } from 'firebase/firestore'; 
-
+import { db } from '../Firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import CircularProgress from '@mui/material/CircularProgress'; 
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,7 +16,8 @@ const AuthPage = () => {
   const [name, setName] = useState('');
   const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState(null);
-  const navigate = useNavigate(); 
+  const [loading, setLoading] = useState(false); 
+  const navigate = useNavigate();
 
   const handleAvatarChange = (e) => {
     if (e.target.files[0]) {
@@ -27,62 +28,55 @@ const AuthPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true); 
 
     if (isLogin) {
-        
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log('User signed in:', userCredential.user);
-            
-            
-            localStorage.setItem('user', JSON.stringify(userCredential.user));
-
-            navigate('/'); 
-        } catch (error) {
-            setError(error.message);
-            console.error('Error signing in:', error);
-        }
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('User signed in:', userCredential.user);
+        localStorage.setItem('user', JSON.stringify(userCredential.user));
+        navigate('/');
+      } catch (error) {
+        setError(error.message);
+        console.error('Error signing in:', error);
+      } finally {
+        setLoading(false); 
+      }
     } else {
-        
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            console.log('User signed up:', user);
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log('User signed up:', user);
 
-            if (avatar) {
-                const avatarRef = ref(storage, `avatars/${user.uid}`);
-                await uploadBytes(avatarRef, avatar);
-                const avatarURL = await getDownloadURL(avatarRef);
-
-                await updateProfile(user, { displayName: name, photoURL: avatarURL });
-                
-                
-                await setDoc(doc(db, 'users', user.uid), {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: name,
-                    photoURL: avatarURL,
-                });
-                localStorage.setItem('user', JSON.stringify(user));
-            } else {
-                await updateProfile(user, { displayName: name });
-                
-                
-                await setDoc(doc(db, 'users', user.uid), {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: name,
-                });
-                localStorage.setItem('user', JSON.stringify(user));
-            }
-
-            navigate('/');
-        } catch (error) {
-            setError(error.message);
-            console.error('Error signing up:', error);
+        if (avatar) {
+          const avatarRef = ref(storage, `avatars/${user.uid}`);
+          await uploadBytes(avatarRef, avatar);
+          const avatarURL = await getDownloadURL(avatarRef);
+          await updateProfile(user, { displayName: name, photoURL: avatarURL });
+          await setDoc(doc(db, 'users', user.uid), {
+            uid: user.uid,
+            email: user.email,
+            displayName: name,
+            photoURL: avatarURL,
+          });
+        } else {
+          await updateProfile(user, { displayName: name });
+          await setDoc(doc(db, 'users', user.uid), {
+            uid: user.uid,
+            email: user.email,
+            displayName: name,
+          });
         }
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/');
+      } catch (error) {
+        setError(error.message);
+        console.error('Error signing up:', error);
+      } finally {
+        setLoading(false); 
+      }
     }
-};
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
@@ -140,11 +134,15 @@ const AuthPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <Button
             label={isLogin ? 'Login' : 'Sign Up'}
             type="submit"
             className="w-full px-6 py-2 mt-4 bg-purple-500 text-white rounded-full hover:bg-purple-600"
-          />
+            disabled={loading} 
+          >
+            {loading ? <CircularProgress size={24} /> : (isLogin ? 'Login' : 'Sign Up')}
+          </Button>
         </form>
         <p className="mt-6 text-center text-gray-600">
           {isLogin ? "Don't have an account?" : "Already have an account?"}

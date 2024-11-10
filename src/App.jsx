@@ -1,5 +1,9 @@
 import landingPageData from './Webdata/webdata';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import Overview from './Adminpanel/Overview.jsx';
 import Home from './Pages/Home';
 import AboutUs from './Pages/AboutUs';
 import ContactUs from './Pages/ContactUs';
@@ -21,10 +25,36 @@ import Support from './Pages/Support.jsx';
 import CartcontextProvider from './context/CartContext.jsx';
 import CheckoutPage from './Pages/CheckOut.jsx';
 import OrderHistoryPage from './Pages/OrderHistory.jsx';
+import AdminRoutes from './Adminpanel/AdminROUTES.jsx';
 
 function App() {
   const { pricing } = landingPageData;
   
+  const [isAdmin, setIsAdmin] = useState(false); 
+  const db = getFirestore();
+  const auth = getAuth();
+  useEffect(() => {
+    const checkUserRole = async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, "roles", user.uid));
+        if (userDoc.exists() && userDoc.data().role === "admin") {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        checkUserRole(user);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, db]);
 
   return (
   <CartcontextProvider>
@@ -32,6 +62,12 @@ function App() {
     <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
+        {isAdmin? (
+          <Route path='/Overview' element={<Overview/>}/>
+        ):(
+          <Route path='/' element={<Home/>}/>
+        )
+        }
         <Route path="/productPage" element = {<ProductPage />}/>
         <Route path="/productPage/:id" element = {<Detail />}/>
         <Route path="/ContactUs" element={<ContactUs />} />
@@ -49,9 +85,12 @@ function App() {
         <Route path="/Support" element={<Support/>}/>
         <Route path='/CheckOut' element={<CheckoutPage/>}/>
         <Route path="/OrderHistory" element = {<OrderHistoryPage/>}/>
+        <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
     </BrowserRouter>
     </CartcontextProvider>
+
+  
   );
 }
 

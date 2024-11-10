@@ -8,7 +8,7 @@ export const landingPageData = {
     {
       title: 'Welcome to HealthTrack',
       description: 'Explore our premium health and wellness programs',
-      img: 'https://sport.leeds.ac.uk/wp-content/uploads/2024/06/Health-and-Wellbeing-banner-1920-x-600.webp',
+      img: 'https://images6.alphacoders.com/774/thumb-1920-774315.jpg',
     },
     {
       title: 'Discover Your Inner Strength',
